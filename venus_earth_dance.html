@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+
+        <style>
+            #earth {
+                box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+            }
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            const BLACK = 'rgba(0, 0, 0, 1.0)';
+            const WHITE = 'rgba(255, 255, 255, 1.0)';
+            const GRAY = 'rgba(150, 150, 150, 1.0)';
+            const LIGHTGRAY = 'rgba(255, 255, 255, 0.2)';
+            const YELLOW = 'rgba(255, 255, 50, 0.9)';
+            const BLUE = 'rgba(4, 105, 180, 1.0)';
+
+            var width = 960,
+                height = 500,
+                originX = 480,
+                originY = 250;
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("background-color", BLACK);
+
+            var lines = svg.append("g")
+                .attr("id", "lines");
+
+            var planets = svg.append("g")
+                .attr("id", "planets");
+
+            var sun = planets.append("circle")
+                .attr("cx", originX)
+                .attr("cy",originY)
+                .attr("r", 20)
+                .style("fill", YELLOW);
+
+            var venusOrbit = planets.append("circle")
+                .attr("cx", originX)
+                .attr("cy",originY)
+                .attr("r",160)                
+                .attr("stroke", "white")
+                .attr("stroke-width", 1)
+                .style("fill", "none");
+
+            var earthOrbit = planets.append("circle")
+                .attr("cx",originX)
+                .attr("cy",originY)
+                .attr("r",220)                
+                .attr("stroke", "white")
+                .attr("stroke-width", 1)
+                .style("fill", "none");   
+
+            var con = planets.append("line")
+                .attr("id", "con")
+                .attr("x1", originX)
+                .attr("y1", 30)
+                .attr("x2", originX)
+                .attr("y2", 90)
+                .attr("stroke-width", 2)
+                .attr("stroke", YELLOW);
+
+            var venus = planets.append("circle")
+                .attr("id", "venus")
+                .attr("cx", originX)
+                .attr("cy", 90)
+                .attr("r", 8)                
+                .style("fill", GRAY);  
+
+            var earth = planets.append("circle")
+                .attr("id", "earth")
+                .attr("cx", originX)
+                .attr("cy", 30)
+                .attr("r", 12)               
+                .style("fill", BLUE);   
+         
+            var offset = 0;
+            var t = d3.interval(thickFn);
+
+            function thickFn(elapsed) {
+
+                offset += 0.052359833;
+                offset2 = offset / 0.6152;
+
+                var xE = originX + 220 * Math.cos(offset - (0.5*Math.PI)),
+                    yE = originY + 220 * Math.sin(offset - (0.5*Math.PI)),
+                    xV = originX + 160 * Math.cos(offset2 - (0.5*Math.PI)),
+                    yV = originY + 160 * Math.sin(offset2 - (0.5*Math.PI));
+
+                lines.append("line")
+                    .attr("x1", xE)
+                    .attr("y1", yE)
+                    .attr("x2", xV)
+                    .attr("y2", yV)
+                    .attr("stroke-width", 1)
+                    .attr("stroke", LIGHTGRAY);
+
+                earth
+                    .attr("cx", xE) 
+                    .attr("cy", yE); 
+ 
+                venus
+                    .attr("cx", xV) 
+                    .attr("cy", yV); 
+
+                con
+                    .attr("x1", xE)
+                    .attr("y1", yE)
+                    .attr("x2", xV)
+                    .attr("y2", yV);
+
+                if (offset >= 50.26544) 
+                    t.stop();
+            }           
+        </script>
+    </body>
+</html>
